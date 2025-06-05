@@ -16,9 +16,9 @@ jobs:
       fail-fast: true
       matrix:
         os:
-          - macos-12
           - macos-13
           - macos-14
+          - macos-15
         build_type:
           - Release
         lib:
@@ -63,7 +63,7 @@ jobs:
       - name: Setup Environment
         if: matrix.build_type == 'Release'
         run: |
-          echo 'CXXFLAGS=-flto' >> $GITHUB_ENV
+          echo 'CXXFLAGS=-flto=auto' >> $GITHUB_ENV
 
       - name: Configure (iOS)
         if: matrix.target == 'ios'

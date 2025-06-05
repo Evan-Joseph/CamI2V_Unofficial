@@ -61,7 +61,7 @@ Solving
    the first place to start is by looking at the output of
    ``Solver::Summary::FullReport``. Here is an example
 
-   .. code-block:: bash
+   .. code-block:: console
 
      ./bin/bundle_adjuster --input ../data/problem-16-22106-pre.txt
 
@@ -114,11 +114,10 @@ Solving
 
      Termination:                   NO_CONVERGENCE (Maximum number of iterations reached.)
 
-  Let us focus on run-time performance. The relevant lines to look at
-  are
+   Let us focus on run-time performance. The relevant lines to look at are
 
 
-   .. code-block:: bash
+   .. code-block:: console
 
      Time (in seconds):
      Preprocessor                            0.283
@@ -132,25 +131,24 @@ Solving
      Total                                   1.220
 
 
-  Which tell us that of the total 1.2 seconds, about .3 seconds was
-  spent in the linear solver and the rest was mostly spent in
-  preprocessing and jacobian evaluation.
+   Which tell us that of the total 1.2 seconds, about .3 seconds was spent in
+   the linear solver and the rest was mostly spent in preprocessing and jacobian
+   evaluation.
 
-  The preprocessing seems particularly expensive. Looking back at the
-  report, we observe
+   The preprocessing seems particularly expensive. Looking back at the report,
+   we observe
 
-   .. code-block:: bash
+   .. code-block:: console
 
      Linear solver ordering              AUTOMATIC                22106, 16
 
-  Which indicates that we are using automatic ordering for the
-  ``SPARSE_SCHUR`` solver. This can be expensive at times. A straight
-  forward way to deal with this is to give the ordering manually. For
-  ``bundle_adjuster`` this can be done by passing the flag
-  ``-ordering=user``. Doing so and looking at the timing block of the
-  full report gives us
+   Which indicates that we are using automatic ordering for the ``SPARSE_SCHUR``
+   solver. This can be expensive at times. A straight forward way to deal with
+   this is to give the ordering manually. For ``bundle_adjuster`` this can be
+   done by passing the flag ``-ordering=user``. Doing so and looking at the
+   timing block of the full report gives us
 
-   .. code-block:: bash
+   .. code-block:: console
 
      Time (in seconds):
      Preprocessor                            0.051
@@ -164,5 +162,4 @@ Solving
      Total                                   0.935
 
 
-
-  The preprocessor time has gone down by more than 5.5x!.
+   The preprocessor time has gone down by more than 5.5x!

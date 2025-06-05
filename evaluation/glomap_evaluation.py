@@ -149,6 +149,9 @@ if __name__ == "__main__":
         try:
             entry = evaluate(tmp_dir, name)
         except Exception as e:
+            print(f"ERROR processing file {file}: {e}") # <--- 取消注释或添加这行
+            import traceback # <--- 添加导入
+            traceback.print_exc() # <--- 打印完整的堆栈跟踪
             # print(e)
             # with open("failed_videos.txt", "a+") as f:
             #     f.write(f"{file}: {e}\n")

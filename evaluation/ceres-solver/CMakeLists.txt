@@ -124,7 +124,23 @@ endif()
 
 # Abseil
 if (EXISTS "${Ceres_SOURCE_DIR}/third_party/abseil-cpp/CMakeLists.txt")
-  message("-- Using the version of abseil in ceres-solver/third_party/abseil-cpp")
+  # extract submodule absl_VERSION
+  file(STRINGS "${Ceres_SOURCE_DIR}/third_party/abseil-cpp/CMakeLists.txt" project_calls REGEX "[ \t]*project\\([ \t]*absl")
+  foreach(project_call IN LISTS project_calls)
+    string(REGEX MATCH "VERSION[ ]+([0-9]+(\.(rc)?[0-9]+)?)" version_param "${project_call}")
+      if (version_param)
+        set(absl_VERSION "${CMAKE_MATCH_1}")
+        message("-- Using the version of abseil in ceres-solver/third_party/abseil-cpp with version ${absl_VERSION}")
+        break ()
+      endif()
+  endforeach()
+  unset(project_calls)
+  unset(project_call)
+  unset(version_param)
+  if (NOT absl_VERSION)
+    message("-- Using the version of abseil in ceres-solver/third_party/abseil-cpp")
+  endif()
+
   # In the normal course of things, we would not need the following constraint.
   # However, if we do not set the standard, then std::basic_string_view is not
   # available, which absl depends on and linking the test fails.
@@ -150,6 +166,8 @@ if (EXISTS "${Ceres_SOURCE_DIR}/third_party/abseil-cpp/CMakeLists.txt")
   set(CMAKE_C_VISIBILITY_PRESET hidden)
   set(CMAKE_CXX_VISIBILITY_PRESET hidden)
   set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
+
+  set(CERES_USE_SYSTEM_ABSL NO)
 else()
   message("-- ceres-solver/third_party/abseil-cpp is empty, so falling back to system installed abseil")
   find_package(absl REQUIRED 20240116)
@@ -162,6 +180,13 @@ else()
       message(FATAL_ERROR "The version of abseil installed on the system provides no version info and is missing TARGET 'absl::absl_vlog_is_on', need at least 20240116")
     endif()
   endif()
+  set(CERES_USE_SYSTEM_ABSL YES)
+endif()
+if (NOT absl_VERSION)
+  if (EXPORT_BUILD_DIR)
+    message(FATAL_ERROR "Cannot generate CeresConfig.cmake due to missing Abseil version. Using resulting package configuration will likely result in integration errors. Set absl_VERSION manually to disable this error message")
+  endif()
+  install (CODE [=[message (FATAL_ERROR "Cannot generate CeresConfig.cmake due to missing Abseil version. Using resulting package configuration will likely result in integration errors. Set absl_VERSION manually to disable this error message.")]=])
 endif()
 
 # Google Test
@@ -209,17 +234,9 @@ unset(CERES_COMPILE_OPTIONS)
 
 # Eigen.
 # Eigen delivers Eigen3Config.cmake since v3.3.3
-find_package(Eigen3 3.3 REQUIRED)
+find_package(Eigen3 3.3.4 REQUIRED NO_MODULE)
 if (Eigen3_FOUND)
   message("-- Found Eigen version ${Eigen3_VERSION}: ${Eigen3_DIR}")
-  if (CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64.*|AARCH64.*)" AND
-      Eigen3_VERSION VERSION_LESS 3.3.4)
-    # As per issue #289: https://github.com/ceres-solver/ceres-solver/issues/289
-    # the bundle_adjustment_test will fail for Eigen < 3.3.4 on aarch64.
-    message(FATAL_ERROR "-- Ceres requires Eigen version >= 3.3.4 on aarch64. "
-      "Detected version of Eigen is: ${Eigen3_VERSION}.")
-  endif()
-
   if (EIGENSPARSE)
     message("-- Enabling use of Eigen as a sparse linear algebra library.")
     list(APPEND CERES_COMPILE_OPTIONS CERES_USE_EIGEN_SPARSE)
@@ -519,18 +536,6 @@ else (NOT CMAKE_BUILD_TYPE)
     message("\n=================================================================================")
   endif (CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif (NOT CMAKE_BUILD_TYPE)
-
-if (MINGW)
-  # MinGW produces code that segfaults when performing matrix multiplications
-  # in Eigen when compiled with -O3 (see [1]), as such force the use of -O2
-  # which works.
-  #
-  # [1] http://eigen.tuxfamily.org/bz/show_bug.cgi?id=556
-  message("-- MinGW detected, forcing -O2 instead of -O3 in Release for Eigen due "
-          "to a MinGW bug: http://eigen.tuxfamily.org/bz/show_bug.cgi?id=556")
-  string(REPLACE "-O3" "-O2" CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-  update_cache_variable(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
-endif (MINGW)
 
 # After the tweaks for the compile settings, disable some warnings on MSVC.
 if (MSVC)

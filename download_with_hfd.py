@@ -136,8 +136,8 @@ def main():
                       help="本地保存目录 (默认: ./RealCam-Vid-Test)")
     parser.add_argument("--username", default="EvanSirius",
                       help="Hugging Face用户名 (默认: EvanSirius)")
-    parser.add_argument("--token", default="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",
-                      help="Hugging Face令牌 (默认: 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)")
+    parser.add_argument("--token", default="hf_TOKEN",
+                      help="Hugging Face令牌 (默认: hf_TOKEN)")
     parser.add_argument("--batch-size", type=int, default=10,
                       help="每批处理的文件数量 (默认: 10)")
     parser.add_argument("--no-dataset", action="store_true",
