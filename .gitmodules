@@ -3,10 +3,10 @@
 	url = https://github.com/ceres-solver/ceres-solver.git
 [submodule "evaluation/colmap"]
 	path = evaluation/colmap
-	url = https://github.com/colmap/colmap
+	url = https://github.com/colmap/colmap.git
 [submodule "evaluation/glomap"]
 	path = evaluation/glomap
-	url = https://github.com/colmap/glomap
+	url = https://github.com/colmap/glomap.git
 [submodule "evaluation/FVD"]
 	path = evaluation/FVD
 	url = https://github.com/zhizhou57/FVD
