@@ -1,6 +1,6 @@
 [submodule "evaluation/ceres-solver"]
 	path = evaluation/ceres-solver
-	url = https://github.com/ceres-solver/ceres-solver
+	url = https://github.com/ceres-solver/ceres-solver.git
 [submodule "evaluation/colmap"]
 	path = evaluation/colmap
 	url = https://github.com/colmap/colmap
