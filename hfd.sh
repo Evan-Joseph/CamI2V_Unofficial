@@ -78,8 +78,8 @@ while [[ $# -gt 0 ]]; do
             esac
             shift 2
             ;;
-        -x) validate_number "threads (-x)" "$2" 16; THREADS="$2"; shift 2 ;;
-        -j) validate_number "concurrent downloads (-j)" "$2" 16; CONCURRENT="$2"; shift 2 ;;
+        -x) validate_number "threads (-x)" "$2" 10; THREADS="$2"; shift 2 ;;
+        -j) validate_number "concurrent downloads (-j)" "$2" 10; CONCURRENT="$2"; shift 2 ;;
         --dataset) DATASET=1; shift ;;
         --local-dir) LOCAL_DIR="$2"; shift 2 ;;
         --revision) REVISION="$2"; shift 2 ;;
