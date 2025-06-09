@@ -149,7 +149,7 @@ data:
       target: CameraControl.data.mix_dataset.MixDataset
       params:
         data_root: ../datasets/RealEstate10K
-        metadata_path: ../datasets/RealEstate10K/CamI2V_style_metadata_100.pth
+        metadata_path: ../datasets/RealEstate10K/O-Metadata-300.pth
         video_length: 16
         frame_stride: 8
         frame_stride_for_condition: 0

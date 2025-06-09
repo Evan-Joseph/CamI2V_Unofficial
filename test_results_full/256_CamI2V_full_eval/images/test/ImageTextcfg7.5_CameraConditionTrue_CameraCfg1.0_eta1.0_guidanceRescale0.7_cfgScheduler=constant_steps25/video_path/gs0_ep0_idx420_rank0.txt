@@ -1,0 +1,1 @@
+idx=0, txt=../datasets/RealEstate10K/video_clips/test/3I-hRUAVDm8/ec095970b124c66e.mp4

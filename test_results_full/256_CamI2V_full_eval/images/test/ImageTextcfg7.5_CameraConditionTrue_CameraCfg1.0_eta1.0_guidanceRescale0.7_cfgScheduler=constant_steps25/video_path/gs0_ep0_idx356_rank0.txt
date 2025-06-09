@@ -1,0 +1,1 @@
+idx=0, txt=../datasets/RealEstate10K/video_clips/test/tMjzRi1k4V8/2bcb26e95f5d152b.mp4
